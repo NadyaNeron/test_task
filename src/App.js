@@ -4,7 +4,7 @@ import {Home} from './pages/Home';
 import {About} from './pages/About';
 import {Navbar} from './components/navbar';
 import {Alert} from './components/Alert';
-import {AlertState} from './context/alert/AlertState';
+import { AlertState } from './context/alert/AlertState';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           <Route path={'/about'} element={<About/>} />
         </Routes>
       </div>
-    </BrowserRouter>   
+    </BrowserRouter>  
     </AlertState>
   );
 }
