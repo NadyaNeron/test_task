@@ -1,15 +1,29 @@
-import React,{Fragment} from 'react';
+import React,{Fragment, useContext, useEffect} from 'react';
 import {Form} from '../components/Form';
 import  {Notes}  from '../components/Notes';
+import { FirebaseContext } from '../context/firebase/firebaseContext';
+import { Loader } from '../components/loader';
 
 export const Home = () => {
-    const notes = new Array(3).fill('').map((_,i) => ({id:i, title:`Node ${i+1}`}))
+    const firebase = useContext(FirebaseContext)
+    console.log(firebase)
+    useEffect (() => {
+        firebase.fetchNotes()
+        // eslint-disable-next-line
+    }, [])    
+
     return (
         <Fragment>
             <h1>Home page</h1>
             <Form />
+
             <hr/>
-            <Notes notes = {notes}/>
+
+            {firebase.loading
+                ? <Loader />
+                : <Notes notes={firebase.notes} />
+            }
+
         </Fragment>
     )
 }
