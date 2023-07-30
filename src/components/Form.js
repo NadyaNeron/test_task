@@ -7,8 +7,6 @@ export const Form = () => {
     const alert = useContext(AlertContext)
     const firebase = useContext(FirebaseContext)
 
-    console.log(firebase)
-
     const submitHandler = event => {
         event.preventDefault()
 
