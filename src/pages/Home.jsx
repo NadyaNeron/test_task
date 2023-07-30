@@ -6,7 +6,7 @@ import { Loader } from '../components/loader';
 
 export const Home = () => {
     const firebase = useContext(FirebaseContext)
-    console.log(firebase)
+
     useEffect (() => {
         firebase.fetchNotes()
         // eslint-disable-next-line
@@ -21,7 +21,7 @@ export const Home = () => {
 
             {firebase.loading
                 ? <Loader />
-                : <Notes notes={firebase.notes} />
+                : <Notes notes={firebase.notes} onRemove={firebase.removeNote} />
             }
 
         </Fragment>
