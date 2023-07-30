@@ -1,11 +1,12 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import axios from "axios";
 import { FirebaseContext } from "./firebaseContext";
 import { firebaseReducer } from "./firebaseReducer";
 import { ADD_NOTE, FETCH_NOTES, REMOVE_NOTE, SHOW_LOADER } from "../types";
 const url = process.env.REACT_APP_DB_URL
-console.log(url)
+
 export const FirebaseState = ({ children }) => {
+    const [orderCounter, setOrderCounter] = useState(1)
     const initialState = {
         notes: [],
         loading: false
@@ -31,9 +32,9 @@ export const FirebaseState = ({ children }) => {
 
     const addNote = async (title) => {
         const note = {
-            title, date: new Date().toJSON()
+            title, date: new Date().toJSON(), order: orderCounter
         }
-
+        setOrderCounter(orderCounter+1)
         try {
             const res = await axios.post(`${url}/notes.json`, note)
             console.log('addNote', res.data)
@@ -54,6 +55,7 @@ export const FirebaseState = ({ children }) => {
             type: REMOVE_NOTE,
             payload: id
         })
+        setOrderCounter(orderCounter-1)
     }
 
     return (
