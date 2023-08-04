@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import axios from "axios";
 import { FirebaseContext } from "./firebaseContext";
 import { firebaseReducer } from "./firebaseReducer";
@@ -11,11 +11,8 @@ export const FirebaseState = ({ children }) => {
     if (!sessionStorage.getItem('number')) sessionStorage.setItem('number', orderCounter);
     else orderCounter = sessionStorage.getItem('number');
 
-    const [n, setN] = useState([])
-    console.log(setN)
     const initialState = {
-        notes: n,
-        setNotes:setN,
+        notes: [],
         loading: true
     }
     const [state, dispatch] = useReducer(firebaseReducer, initialState)
@@ -26,12 +23,11 @@ export const FirebaseState = ({ children }) => {
         showLoader()
         // res = response
         const res = await axios.get(`${url}/notes.json`)
-        console.log(res.data)
 
-        if (res.data === null){
-            addNote("DefaultNote")
+       /* if (res.data === null){
+            alert
         }
-
+*/
 
         const payload = Object.keys(res.data).map(key => {
             return {
@@ -78,7 +74,6 @@ export const FirebaseState = ({ children }) => {
         <FirebaseContext.Provider value={{
             loading: state.loading,
             notes: state.notes,
-            setNotes:state.setNotes,
             showLoader, addNote, fetchNotes, removeNote
         }}>
             {children}

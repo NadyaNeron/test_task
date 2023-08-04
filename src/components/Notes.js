@@ -3,12 +3,14 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { AlertContext } from "../context/alert/alertContext";
 import {SET_NOTES} from "../context/types"
 import {notesReducer} from "./notesReducer"
+import axios from 'axios'
 
-export const Notes = ({notes, onRemove, setNotes}) => {
+const url = process.env.REACT_APP_DB_URL
+
+export const Notes = ({notes, onRemove}) => {
     const alert = useContext(AlertContext)
 
     const [state,dispatch] = useReducer(notesReducer, {notes})
-    console.log('before(0)', notes, state.notes)
 
     const [currentNote, setCurrentNote] = useState(null)
 
@@ -27,7 +29,6 @@ export const Notes = ({notes, onRemove, setNotes}) => {
     }
 
     function dropHandler(e, note) {
-        e.preventDefault()
 
         function Set_Notes(notes){
             const payload = {
@@ -37,9 +38,9 @@ export const Notes = ({notes, onRemove, setNotes}) => {
 
             dispatch({type: SET_NOTES,payload})
         }
-        console.log('before', notes, state.notes)
+
         Set_Notes(notes)
-        console.log('after', notes, state.notes)
+
 
        /* setNotes(notes.map(n =>{
             if (n.id === note.id){
