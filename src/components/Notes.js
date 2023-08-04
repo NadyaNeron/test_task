@@ -1,9 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useReducer } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { AlertContext } from "../context/alert/alertContext";
+import {SET_NOTES} from "../context/types"
+import {notesReducer} from "./notesReducer"
 
 export const Notes = ({notes, onRemove, setNotes}) => {
     const alert = useContext(AlertContext)
+
+    const [state,dispatch] = useReducer(notesReducer, {notes})
+    console.log('before(0)', notes, state.notes)
 
     const [currentNote, setCurrentNote] = useState(null)
 
@@ -23,7 +28,20 @@ export const Notes = ({notes, onRemove, setNotes}) => {
 
     function dropHandler(e, note) {
         e.preventDefault()
-        setNotes(notes.map(n =>{
+
+        function Set_Notes(notes){
+            const payload = {
+                note: note,
+                currentNote: currentNote
+            }
+
+            dispatch({type: SET_NOTES,payload})
+        }
+        console.log('before', notes, state.notes)
+        Set_Notes(notes)
+        console.log('after', notes, state.notes)
+
+       /* setNotes(notes.map(n =>{
             if (n.id === note.id){
                 return {...n, order: currentNote.order}
             }
@@ -31,7 +49,8 @@ export const Notes = ({notes, onRemove, setNotes}) => {
                 return {...n, order: note.order}
             }
             return n
-        }))
+         }))
+        */
         e.target.style.background = 'white'
     }
 
@@ -45,7 +64,7 @@ export const Notes = ({notes, onRemove, setNotes}) => {
 
     return(
     <TransitionGroup component="ul" className="list-group">
-        {notes?.sort(sortNotes).map(note => (
+        {state?.notes?.sort(sortNotes).map(note => (
             <CSSTransition
                 onDragStart={(e) => dragStartHandler(e, note)}
                 onDragLeave={(e) => dragEndHandler(e)}

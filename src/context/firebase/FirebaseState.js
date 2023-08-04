@@ -12,19 +12,26 @@ export const FirebaseState = ({ children }) => {
     else orderCounter = sessionStorage.getItem('number');
 
     const [n, setN] = useState([])
+    console.log(setN)
     const initialState = {
         notes: n,
         setNotes:setN,
-        loading: false
+        loading: true
     }
     const [state, dispatch] = useReducer(firebaseReducer, initialState)
 
-    const showLoader = () => dispatch({ type: SHOW_LOADER})
+    const showLoader = () => dispatch({type: SHOW_LOADER})
 
     const fetchNotes = async () => {
         showLoader()
         // res = response
         const res = await axios.get(`${url}/notes.json`)
+        console.log(res.data)
+
+        if (res.data === null){
+            addNote("DefaultNote")
+        }
+
 
         const payload = Object.keys(res.data).map(key => {
             return {
@@ -32,6 +39,7 @@ export const FirebaseState = ({ children }) => {
                 id:key
             }
         })
+
 
         dispatch({type: FETCH_NOTES, payload })
     }
@@ -43,14 +51,15 @@ export const FirebaseState = ({ children }) => {
 
         try {
             const res = await axios.post(`${url}/notes.json`, note)
-            console.log('addNote', res.data)
             const payload = {
                 ...note,
                 id: res.data.name
             }
+            
             orderCounter++
             sessionStorage.setItem('number', orderCounter)
-            dispatch({ type: ADD_NOTE,payload})
+
+            dispatch({type: ADD_NOTE,payload})
         } catch (e) {
             throw new Error(e.message)
         }
@@ -63,8 +72,6 @@ export const FirebaseState = ({ children }) => {
             type: REMOVE_NOTE,
             payload: id
         })
-        orderCounter--
-        sessionStorage.setItem('number', orderCounter);
     }
 
     return (
