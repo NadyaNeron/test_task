@@ -21,7 +21,7 @@ export const Home = () => {
 
             {firebase.loading
                 ? <Loader />
-                : <Notes notes={firebase.notes} onRemove={firebase.removeNote} />
+                : <Notes notes={firebase.notes} onRemove={firebase.removeNote} setNotes={firebase.setNotes} />
             }
 
         </Fragment>

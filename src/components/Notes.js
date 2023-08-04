@@ -2,10 +2,8 @@ import React, { useContext, useState } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { AlertContext } from "../context/alert/alertContext";
 
-export const Notes = ({notes, onRemove}) => {
+export const Notes = ({notes, onRemove, setNotes}) => {
     const alert = useContext(AlertContext)
-
-    const[Ntes, setNotes] = useState([])
 
     const [currentNote, setCurrentNote] = useState(null)
 
@@ -25,7 +23,7 @@ export const Notes = ({notes, onRemove}) => {
 
     function dropHandler(e, note) {
         e.preventDefault()
-        setNotes(notes?.map(n =>{
+        setNotes(notes.map(n =>{
             if (n.id === note.id){
                 return {...n, order: currentNote.order}
             }

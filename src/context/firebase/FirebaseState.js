@@ -6,9 +6,15 @@ import { ADD_NOTE, FETCH_NOTES, REMOVE_NOTE, SHOW_LOADER } from "../types";
 const url = process.env.REACT_APP_DB_URL
 
 export const FirebaseState = ({ children }) => {
-    const [orderCounter, setOrderCounter] = useState(1)
+    let orderCounter = 0
+
+    if (!sessionStorage.getItem('number')) sessionStorage.setItem('number', orderCounter);
+    else orderCounter = sessionStorage.getItem('number');
+
+    const [n, setN] = useState([])
     const initialState = {
-        notes: [],
+        notes: n,
+        setNotes:setN,
         loading: false
     }
     const [state, dispatch] = useReducer(firebaseReducer, initialState)
@@ -34,7 +40,7 @@ export const FirebaseState = ({ children }) => {
         const note = {
             title, date: new Date().toJSON(), order: orderCounter
         }
-        setOrderCounter(orderCounter+1)
+
         try {
             const res = await axios.post(`${url}/notes.json`, note)
             console.log('addNote', res.data)
@@ -42,6 +48,8 @@ export const FirebaseState = ({ children }) => {
                 ...note,
                 id: res.data.name
             }
+            orderCounter++
+            sessionStorage.setItem('number', orderCounter)
             dispatch({ type: ADD_NOTE,payload})
         } catch (e) {
             throw new Error(e.message)
@@ -55,13 +63,15 @@ export const FirebaseState = ({ children }) => {
             type: REMOVE_NOTE,
             payload: id
         })
-        setOrderCounter(orderCounter-1)
+        orderCounter--
+        sessionStorage.setItem('number', orderCounter);
     }
 
     return (
         <FirebaseContext.Provider value={{
             loading: state.loading,
             notes: state.notes,
+            setNotes:state.setNotes,
             showLoader, addNote, fetchNotes, removeNote
         }}>
             {children}
