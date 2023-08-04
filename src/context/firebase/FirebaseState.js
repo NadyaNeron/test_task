@@ -24,11 +24,6 @@ export const FirebaseState = ({ children }) => {
         // res = response
         const res = await axios.get(`${url}/notes.json`)
 
-       /* if (res.data === null){
-            alert
-        }
-*/
-
         const payload = Object.keys(res.data).map(key => {
             return {
                 ...res.data[key],
