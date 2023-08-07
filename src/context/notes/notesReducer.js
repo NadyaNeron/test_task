@@ -1,4 +1,4 @@
-import { SET_NOTES} from "../context/types"
+import { SET_NOTES, REPLACE_STATE} from "../types"
 
 const handlers = {
     [SET_NOTES]: (state, {payload}) => ({
@@ -12,6 +12,9 @@ const handlers = {
             }
             return n
         })
+    }),
+    [REPLACE_STATE]: (state, {payload}) => ({
+            notes: payload.notes
     }),
     DEFAULT: state => state
 }

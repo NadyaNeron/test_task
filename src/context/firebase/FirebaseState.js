@@ -3,6 +3,7 @@ import axios from "axios";
 import { FirebaseContext } from "./firebaseContext";
 import { firebaseReducer } from "./firebaseReducer";
 import { ADD_NOTE, FETCH_NOTES, REMOVE_NOTE, SHOW_LOADER } from "../types";
+
 const url = process.env.REACT_APP_DB_URL
 
 export const FirebaseState = ({ children }) => {
@@ -13,7 +14,7 @@ export const FirebaseState = ({ children }) => {
 
     const initialState = {
         notes: [],
-        loading: true
+        loading: false
     }
     const [state, dispatch] = useReducer(firebaseReducer, initialState)
 
@@ -32,10 +33,10 @@ export const FirebaseState = ({ children }) => {
         })
 
 
-        dispatch({type: FETCH_NOTES, payload })
+        dispatch({type: FETCH_NOTES, payload})
     }
 
-    const addNote = async (title) => {
+    const addNote = async title => {
         const note = {
             title, date: new Date().toJSON(), order: orderCounter
         }

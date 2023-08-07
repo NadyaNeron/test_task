@@ -1,77 +1,25 @@
-import React, { useContext, useState, useReducer } from "react";
+import React, { useContext } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { AlertContext } from "../context/alert/alertContext";
-import {SET_NOTES} from "../context/types"
-import {notesReducer} from "./notesReducer"
+import { NotesContext } from "../context/notes/notesContext";
 import axios from 'axios'
 
 const url = process.env.REACT_APP_DB_URL
 
 export const Notes = ({notes, onRemove}) => {
     const alert = useContext(AlertContext)
-
-    const [state,dispatch] = useReducer(notesReducer, {notes})
-
-    const [currentNote, setCurrentNote] = useState(null)
-
-    function dragStartHandler(e, note) {
-        setCurrentNote(note)
-        console.log(note.order)
-    }
-
-    function dragEndHandler(e) {
-        e.target.style.background = 'white'
-    }
-
-    function dragOverHandler(e) {
-        e.preventDefault()
-        e.target.style.background = 'lightgray'
-    }
-
-    function dropHandler(e, note) {
-
-        function Set_Notes(notes){
-            const payload = {
-                note: note,
-                currentNote: currentNote
-            }
-
-            dispatch({type: SET_NOTES,payload})
-        }
-
-        Set_Notes(notes)
-
-
-       /* setNotes(notes.map(n =>{
-            if (n.id === note.id){
-                return {...n, order: currentNote.order}
-            }
-            if (n.id === currentNote.id) {
-                return {...n, order: note.order}
-            }
-            return n
-         }))
-        */
-        e.target.style.background = 'white'
-    }
-
-    const sortNotes = (a,b) => {
-        if(a.order > b.order) {
-            return 1
-        } else {
-            return -1
-        }
-    }
-
+    const state = useContext(NotesContext)
+ 
     return(
     <TransitionGroup component="ul" className="list-group">
-        {state?.notes?.sort(sortNotes).map(note => (
+        {notes?.sort(state.sortNotes)?.map(note => (
+        
             <CSSTransition
-                onDragStart={(e) => dragStartHandler(e, note)}
-                onDragLeave={(e) => dragEndHandler(e)}
-                onDragEnd={(e) => dragEndHandler(e)}
-                onDragOver={(e) => dragOverHandler(e)}
-                onDrop={(e) => dropHandler(e,note)}
+                onDragStart={(e) => state.dragStartHandler(e, note)}
+                onDragLeave={(e) => state.dragEndHandler(e)}
+                onDragEnd={(e) => state.dragEndHandler(e)}
+                onDragOver={(e) => state.dragOverHandler(e)}
+                onDrop={(e) => state.dropHandler(e,note)}
                 draggable={true}
 
                 key={note.id}
