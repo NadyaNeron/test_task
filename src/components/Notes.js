@@ -6,13 +6,13 @@ import axios from 'axios'
 
 const url = process.env.REACT_APP_DB_URL
 
-export const Notes = ({notes, onRemove}) => {
+export const Notes = ({onRemove}) => {
     const alert = useContext(AlertContext)
     const state = useContext(NotesContext)
  
     return(
     <TransitionGroup component="ul" className="list-group">
-        {notes?.sort(state.sortNotes)?.map(note => (
+        {state.notes?.sort(state.sortNotes)?.map(note => (
         
             <CSSTransition
                 onDragStart={(e) => state.dragStartHandler(e, note)}

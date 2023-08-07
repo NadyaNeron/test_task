@@ -24,7 +24,7 @@ export const Home = () => {
             <hr/>
             {firebase.loading
                 ? <Loader />
-                : <Notes notes={firebase.notes} onRemove={firebase.removeNote} />
+                : <Notes onRemove={firebase.removeNote} />
             }
         </Fragment>
     )
