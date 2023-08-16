@@ -1,15 +1,28 @@
 import React, { useContext } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { AlertContext } from "../context/alert/alertContext";
+import { NotesContext } from "../context/notes/notesContext";
+import axios from 'axios'
 
-export const Notes = ({notes, onRemove}) => {
+const url = process.env.REACT_APP_DB_URL
+
+export const Notes = ({onRemove}) => {
     const alert = useContext(AlertContext)
-
+    const state = useContext(NotesContext)
+ 
     return(
     <TransitionGroup component="ul" className="list-group">
-        {notes?.map(note=>(
+        {state.notes?.sort(state.sortNotes)?.map(note => (
+        
             <CSSTransition
-                key={Node.id}
+                onDragStart={(e) => state.dragStartHandler(e, note)}
+                onDragLeave={(e) => state.dragEndHandler(e)}
+                onDragEnd={(e) => state.dragEndHandler(e)}
+                onDragOver={(e) => state.dragOverHandler(e)}
+                onDrop={(e) => state.dropHandler(e,note)}
+                draggable={true}
+
+                key={note.id}
                 classNames={'note'}
                 timeout={800}
             >

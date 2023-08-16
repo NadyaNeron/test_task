@@ -6,11 +6,13 @@ import {Navbar} from './components/navbar';
 import {Alert} from './components/Alert';
 import { AlertState } from './context/alert/AlertState';
 import { FirebaseState } from './context/firebase/FirebaseState';
+import { NotesState } from './context/notes/NotesState';
 
 function App() {
   return (
     <FirebaseState>
       <AlertState>
+        <NotesState>
         <BrowserRouter>
           <Navbar />
           <div className="App">
@@ -20,7 +22,8 @@ function App() {
               <Route path={'/about'} element={<About/>} />
             </Routes>
           </div>
-        </BrowserRouter>  
+        </BrowserRouter>
+        </NotesState> 
       </AlertState>
     </FirebaseState>
   );

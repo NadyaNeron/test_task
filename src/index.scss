@@ -18,7 +18,8 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  width: 700px;
+  cursor: grab;
   strong {
     margin-right: 1rem;
   }

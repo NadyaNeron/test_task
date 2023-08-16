@@ -1,3 +1,3 @@
 import { createContext } from "react";
 
-export const FirebaseContext = createContext({loading: false, notes: [], fetchNotes: ()=>null, addNote: () => null, removeNote: () => null})
+export const FirebaseContext = createContext({loading: true, notes: [], fetchNotes: ()=>null, addNote: () => null, removeNote: () => null})

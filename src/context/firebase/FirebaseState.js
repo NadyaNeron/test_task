@@ -3,16 +3,22 @@ import axios from "axios";
 import { FirebaseContext } from "./firebaseContext";
 import { firebaseReducer } from "./firebaseReducer";
 import { ADD_NOTE, FETCH_NOTES, REMOVE_NOTE, SHOW_LOADER } from "../types";
+
 const url = process.env.REACT_APP_DB_URL
-console.log(url)
+
 export const FirebaseState = ({ children }) => {
+    let orderCounter = 0
+
+    if (!sessionStorage.getItem('number')) sessionStorage.setItem('number', orderCounter);
+    else orderCounter = sessionStorage.getItem('number');
+
     const initialState = {
         notes: [],
         loading: false
     }
     const [state, dispatch] = useReducer(firebaseReducer, initialState)
 
-    const showLoader = () => dispatch({ type: SHOW_LOADER})
+    const showLoader = () => dispatch({type: SHOW_LOADER})
 
     const fetchNotes = async () => {
         showLoader()
@@ -26,22 +32,26 @@ export const FirebaseState = ({ children }) => {
             }
         })
 
-        dispatch({type: FETCH_NOTES, payload })
+
+        dispatch({type: FETCH_NOTES, payload})
     }
 
-    const addNote = async (title) => {
+    const addNote = async title => {
         const note = {
-            title, date: new Date().toJSON()
+            title, date: new Date().toJSON(), order: orderCounter
         }
 
         try {
             const res = await axios.post(`${url}/notes.json`, note)
-            console.log('addNote', res.data)
             const payload = {
                 ...note,
                 id: res.data.name
             }
-            dispatch({ type: ADD_NOTE,payload})
+            
+            orderCounter++
+            sessionStorage.setItem('number', orderCounter)
+
+            dispatch({type: ADD_NOTE,payload})
         } catch (e) {
             throw new Error(e.message)
         }
