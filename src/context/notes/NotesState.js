@@ -4,6 +4,7 @@ import { notesReducer } from "./notesReducer";
 import { SET_NOTES, REPLACE_STATE } from "../types";
 import { AlertContext } from "../alert/alertContext";
 import { FirebaseContext } from "../firebase/firebaseContext";
+import axios from "axios";
 
 
 const url = process.env.REACT_APP_DB_URL
@@ -39,19 +40,25 @@ export const NotesState = ({children}) => {
         e.target.style.background = 'lightgray'
     }
 
-    function dropHandler(e, note) {
-        e.preventDefault()
-        const payload = {
-            note: note,
-            currentNote: currentNote
+    async function dropHandler(e, note) {
+        try{
+            await axios.put(`${url}/notes/${note.id}/order.json`,currentNote.order)
+            await axios.put(`${url}/notes/${currentNote.id}/order.json`, note.order)
+
+            const payload = {
+                note: note,
+                currentNote: currentNote
+            }
+            console.log(payload)
+            dispatch({type: SET_NOTES,payload})
+            console.log('state after dropping', state)  
+    
+            e.target.style.background = 'white'
+        } catch(e) {
+            throw new Error(e.message)
         }
-        console.log(payload)
-        dispatch({type: SET_NOTES,payload})
-        console.log('state after dropping', state)
-
-
-        e.target.style.background = 'white'
     }
+
 
     const sortNotes = (a,b) => {
         if(a.order > b.order) {
